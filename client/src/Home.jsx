@@ -2,8 +2,10 @@ import React from "react"
 import { Box, Stack } from "@chakra-ui/react"
 import Card from "./Card"
 import axios from "axios"
+import { useNavigate } from "react-router-dom"
 
 const Home = () => {
+    const navigate = useNavigate()
     const checkOutHandler = async (amount) => {
         const {
             data: { key },
@@ -24,7 +26,16 @@ const Home = () => {
             description: "Test Transaction",
             image: "https://hatrabbits.com/wp-content/uploads/2017/01/random.jpg",
             order_id: order.id,
-            callback_url: "http://localhost:4000/api/paymentverification",
+            handler: async (response) => {
+                var values = {
+                    razorpay_signature: response.razorpay_signature,
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    transactionamount: amount,
+                }
+                await axios.post("/api/paymentverification", values)
+                navigate("/api/success")
+            },
             prefill: {
                 name: "Swagata Chanda",
                 email: "abc@example.com",
@@ -37,9 +48,8 @@ const Home = () => {
                 color: "#3399cc",
             },
         }
-        const rzp1 = await new window.Razorpay(options)
+        const rzp1 = new window.Razorpay(options)
         rzp1.open()
-        console.log(order)
     }
     return (
         <Box>

@@ -9,3 +9,8 @@ app.use(cors())
 app.set("trust proxy", 1)
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.get("/api/getkey", (req, res) => {
+    res.status(200).json({
+        key: process.env.RAZORPAY_API_KEY,
+    })
+})

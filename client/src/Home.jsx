@@ -34,7 +34,7 @@ const Home = () => {
                     transactionamount: amount,
                 }
                 await axios.post("/api/paymentverification", values)
-                navigate("/api/success")
+                navigate(`/paymentsuccess?reference=${response.razorpay_payment_id}`)
             },
             prefill: {
                 name: "Swagata Chanda",
